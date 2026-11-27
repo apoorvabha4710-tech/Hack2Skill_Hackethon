@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PII Shield – Smart Data Sanitization Tool</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand" aria-label="PII Shield Home">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-title">PII Shield</span>
+          <span class="brand-subtitle">Smart Data Sanitization Tool</span>
+        </span>
+      </a>
+
+      <div class="privacy-badge" role="status" aria-label="100% Client-Side Processing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+        <span>100% Client-Side Processing</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container dashboard">
+    <!-- Welcome Banner -->
+    <section class="welcome-section" aria-labelledby="welcome-heading">
+      <div class="welcome-pill">Local Privacy Workspace</div>
+      <h1 id="welcome-heading">Protect Your Sensitive Data</h1>
+      <p class="welcome-description">
+        Paste raw text or upload TXT and CSV files to inspect, mask, or pseudonymize personally identifiable information directly in your browser—zero uploads, zero external APIs.
+      </p>
+    </section>
+
+    <!-- Input & Controls Card -->
+    <section class="card input-section" aria-labelledby="input-heading">
+      <div class="section-header">
+        <div>
+          <h2 id="input-heading">Data Input</h2>
+          <p class="section-hint">Paste text below or import a local <code>.txt</code> / <code>.csv</code> file.</p>
+        </div>
+        <div class="input-actions-top">
+          <input
+            type="file"
+            id="file-input"
+            accept=".txt,.csv,text/plain,text/csv"
+            hidden
+          />
+          <button type="button" id="upload-file-btn" class="btn btn-secondary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <span>Upload File</span>
+          </button>
+
+          <button type="button" id="load-sample-btn" class="btn btn-soft">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
+            <span>Load Sample Text</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="textarea-wrapper">
+        <label for="raw-input" class="visually-hidden">Input text to sanitize</label>
+        <textarea
+          id="raw-input"
+          class="text-input"
+          rows="8"
+          placeholder="Paste logs, customer records, support transcripts, or CSV rows containing sensitive data..."
+        ></textarea>
+        <div class="input-meta-bar">
+          <span id="file-badge" class="file-badge" hidden>No file loaded</span>
+          <div class="input-counts">
+            <span id="char-count">0 characters</span>
+            <span aria-hidden="true">•</span>
+            <span id="line-count">0 lines</span>
+            <button type="button" id="clear-input-btn" class="btn-link" hidden>Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Redaction Modes -->
+      <fieldset class="modes-fieldset">
+        <legend class="modes-legend">Redaction Mode</legend>
+        <div class="modes-grid" role="radiogroup" aria-label="Redaction Mode">
+          <label class="mode-card is-selected" data-mode="full">
+            <input type="radio" name="redaction-mode" value="full" checked />
+            <div class="mode-card-header">
+              <span class="mode-icon mode-icon-blue" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
+                </svg>
+              </span>
+              <span class="mode-radio-indicator" aria-hidden="true"></span>
+            </div>
+            <h3 class="mode-title">Full Mask</h3>
+            <p class="mode-desc">Replaces detected entities completely with fixed mask blocks for maximum privacy.</p>
+            <code class="mode-example">[REDACTED]</code>
+          </label>
+
+          <label class="mode-card" data-mode="partial">
+            <input type="radio" name="redaction-mode" value="partial" />
+            <div class="mode-card-header">
+              <span class="mode-icon mode-icon-lavender" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </span>
+              <span class="mode-radio-indicator" aria-hidden="true"></span>
+            </div>
+            <h3 class="mode-title">Partial Mask</h3>
+            <p class="mode-desc">Preserves select prefix or suffix characters for verification while hiding sensitive cores.</p>
+            <code class="mode-example">aa***@mail.com · ******4242</code>
+          </label>
+
+          <label class="mode-card" data-mode="pseudonym">
+            <input type="radio" name="redaction-mode" value="pseudonym" />
+            <div class="mode-card-header">
+              <span class="mode-icon mode-icon-indigo" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="16 3 21 3 21 8" />
+                  <line x1="4" y1="20" x2="21" y2="3" />
+                  <polyline points="21 16 21 21 16 21" />
+                  <line x1="15" y1="15" x2="21" y2="21" />
+                  <line x1="4" y1="4" x2="9" y2="9" />
+                </svg>
+              </span>
+              <span class="mode-radio-indicator" aria-hidden="true"></span>
+            </div>
+            <h3 class="mode-title">Consistent Pseudonymization</h3>
+            <p class="mode-desc">Maps identical values to consistent synthetic tokens across the entire dataset.</p>
+            <code class="mode-example">EMAIL_01 · PHONE_01 · IP_01</code>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="primary-action-bar">
+        <p id="detection-status" class="detection-status" role="status" aria-live="polite" hidden></p>
+        <button type="button" id="sanitize-btn" class="btn btn-primary btn-lg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+          <span>Sanitize Data</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Detection Statistics Cards -->
+    <section class="stats-section" aria-labelledby="stats-heading">
+      <div class="section-header compact">
+        <h2 id="stats-heading">Detection Statistics</h2>
+        <span id="total-detected-badge" class="summary-pill">0 Total Matches</span>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card" data-stat="emails">
+          <div class="stat-icon stat-blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">Emails</span>
+            <strong class="stat-value" id="stat-emails">0</strong>
+          </div>
+        </article>
+
+        <article class="stat-card" data-stat="phones">
+          <div class="stat-icon stat-lavender" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">Phone Numbers</span>
+            <strong class="stat-value" id="stat-phones">0</strong>
+          </div>
+        </article>
+
+        <article class="stat-card" data-stat="ips">
+          <div class="stat-icon stat-blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">IP Addresses</span>
+            <strong class="stat-value" id="stat-ips">0</strong>
+          </div>
+        </article>
+
+        <article class="stat-card" data-stat="pan">
+          <div class="stat-icon stat-lavender" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2" />
+              <circle cx="9" cy="10" r="2" />
+              <line x1="15" y1="9" x2="18" y2="9" />
+              <line x1="15" y1="13" x2="18" y2="13" />
+              <path d="M6 16c.6-1.5 1.8-2 3-2s2.4.5 3 2" />
+            </svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">PAN</span>
+            <strong class="stat-value" id="stat-pan">0</strong>
+          </div>
+        </article>
+
+        <article class="stat-card" data-stat="aadhaar">
+          <div class="stat-icon stat-blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 0 0 8 11a4 4 0 1 1 8 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0 0 15.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 0 0 8 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
+            </svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">Aadhaar</span>
+            <strong class="stat-value" id="stat-aadhaar">0</strong>
+          </div>
+        </article>
+
+        <article class="stat-card" data-stat="cards">
+          <div class="stat-icon stat-lavender" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+              <line x1="1" y1="10" x2="23" y2="10" />
+            </svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">Credit Cards</span>
+            <strong class="stat-value" id="stat-cards">0</strong>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Side-by-Side Comparison Panels -->
+    <section class="card comparison-section" aria-labelledby="comparison-heading">
+      <div class="section-header">
+        <div>
+          <h2 id="comparison-heading">Comparison View</h2>
+          <p class="section-hint">Review original content alongside sanitized output before exporting.</p>
+        </div>
+        <button type="button" id="download-btn" class="btn btn-secondary" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          <span>Download Sanitized File</span>
+        </button>
+      </div>
+
+      <div class="comparison-grid">
+        <article class="panel" aria-labelledby="original-panel-title">
+          <header class="panel-header">
+            <div class="panel-title-group">
+              <span class="status-dot dot-neutral" aria-hidden="true"></span>
+              <h3 id="original-panel-title">Original Text</h3>
+            </div>
+            <span class="panel-tag">Raw Input</span>
+          </header>
+          <pre id="original-preview" class="panel-content empty-state">No input provided yet. Paste text or load the sample dataset above, then click Sanitize Data.</pre>
+        </article>
+
+        <article class="panel panel-sanitized" aria-labelledby="sanitized-panel-title">
+          <header class="panel-header">
+            <div class="panel-title-group">
+              <span class="status-dot dot-safe" aria-hidden="true"></span>
+              <h3 id="sanitized-panel-title">Sanitized Output</h3>
+            </div>
+            <div class="panel-header-actions">
+              <span id="active-mode-tag" class="panel-tag panel-tag-accent">Full Mask</span>
+              <button type="button" id="copy-output-btn" class="btn-icon-text" disabled aria-label="Copy sanitized output">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+                <span>Copy</span>
+              </button>
+            </div>
+          </header>
+          <pre id="sanitized-preview" class="panel-content empty-state">Sanitized output will appear here once you run Sanitize Data.</pre>
+        </article>
+      </div>
+    </section>
+
+    <!-- Processing Activity Log -->
+    <section class="card log-section" aria-labelledby="log-heading">
+      <div class="section-header compact">
+        <div class="log-heading-wrap">
+          <h2 id="log-heading">Processing Activity Log</h2>
+          <span class="log-subtitle">Local session audit trail</span>
+        </div>
+        <button type="button" id="clear-log-btn" class="btn-link">Clear Log</button>
+      </div>
+
+      <ul id="activity-log" class="activity-log" aria-live="polite"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>PII Shield — Local Browser Workspace</span>
+      <span>No network requests or server storage used</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
